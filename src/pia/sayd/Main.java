@@ -5,18 +5,94 @@
  */
 package pia.sayd;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jssc.SerialPort;
+import jssc.SerialPortException;
+
 /**
  *
  * @author oscar
  */
 public class Main extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Main
-     */
+    String actualTemp = "";
+    
     public Main() {
         initComponents();
+        //SendData();
+        initThreadReceive();
     }
+    
+    
+    public void initThreadReceive(){
+        Thread t = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    ReceiveData();
+                } catch (Exception ex) {
+                    System.err.println(ex);
+                }
+            }
+        };
+        t.start();
+    }
+    
+    public void SendData(){
+        
+        SerialPort serialPort = new SerialPort("COM3");
+        String mensaje = "1";
+        try {
+            System.out.println("Abrir puerto: "+serialPort.openPort());
+            System.out.println("Parametros establecidos: " + serialPort.setParams(9600, 8, 1, 0));
+            
+            // Pause necesaria
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                System.err.println("Error."+ex);
+            }
+            
+            System.out.println("Mensaje enviado: " + serialPort.writeBytes(mensaje.getBytes()));
+            System.out.println("Puesto cerrado: " + serialPort.closePort());
+        }catch (SerialPortException ex){
+            System.err.println(ex);
+        }
+    }
+    
+    public void ReceiveData(){
+        
+        SerialPort serialPort = new SerialPort("COM3");
+        
+        while(true){
+            
+            try {
+                
+            if(!serialPort.isOpened()){
+                serialPort.openPort();
+                serialPort.setParams(9600, 8, 1, 0);
+            }
+            
+
+            
+            byte[] buffer = serialPort.readBytes(10);//Leer 10 bytes
+            
+            actualTemp = new String(buffer); // Parseando los bytes a objeto String
+            
+            System.out.println(actualTemp.getBytes());
+            
+            
+            
+            //serialPort.closePort();//Close serial port
+            
+            }catch (SerialPortException ex) {
+                System.out.println(ex);
+            }
+        }
+        
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,7 +116,7 @@ public class Main extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("38 °C");
+        jLabel1.setText("18 °C");
 
         jLabel2.setText("Temperatura actual:");
 
@@ -54,7 +130,7 @@ public class Main extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("38 °C");
+        jLabel4.setText("26 °C");
 
         jButton3.setText("+");
 
@@ -65,10 +141,6 @@ public class Main extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(338, 338, 338)
-                .addComponent(jLabel2)
-                .addContainerGap(347, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(144, 144, 144)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -76,7 +148,7 @@ public class Main extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 348, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel4)
                     .addGroup(layout.createSequentialGroup()
@@ -84,6 +156,10 @@ public class Main extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton3)))
                 .addGap(154, 154, 154))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(337, 337, 337))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap(330, Short.MAX_VALUE)
@@ -93,7 +169,9 @@ public class Main extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(113, 113, 113)
+                .addGap(135, 135, 135)
+                .addComponent(jLabel2)
+                .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
@@ -102,8 +180,6 @@ public class Main extends javax.swing.JFrame {
                             .addComponent(jButton3)
                             .addComponent(jButton4)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(72, 72, 72)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -153,6 +229,8 @@ public class Main extends javax.swing.JFrame {
                 new Main().setVisible(true);
             }
         });
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

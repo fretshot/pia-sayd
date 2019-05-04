@@ -1,14 +1,39 @@
-int led = 13; // Se declara la variable led como tipo de dato entero 
+int led = 13;
+int i;
 
-// La rutina setup() se ejecuta al inicio y cuando presionas el botón reset
-void setup() {                
-  pinMode(led, OUTPUT);  //Inicializa el pin numero 13 (valor de variable led) como salida.
-                         //(todas las salidas son digitales)       
+float tempC; 
+int pinLM35 = 0; // Variable del pin de entrada del sensor (A0)
+
+
+void setup() {  
+  
+  Serial.begin(9600);              
+  pinMode(led, OUTPUT);  
+  
 }
-// La rutina loop() se ejecuta una y otra vez por siempre.
+
 void loop() {
-  digitalWrite(led, HIGH);   // Enciende el LED (HIGH el el 1 binario o 5[V])
-  delay(1000);               // Espera un segundo
-  digitalWrite(led, LOW);    // Apaga el LED dejando voltaje 0[V] en la salida
-  delay(1000);               // Espera por un segundo
+  tempC = analogRead(pinLM35); 
+  tempC = (5.0 * tempC * 100.0)/1024.0;
+
+  //Serial.print(tempC);
+  Serial.write(tempC);
+  Serial.flush();
+  
+   /*
+  if (Serial.available() > 0) {
+
+    i = Serial.parseInt();
+    Serial.println("Datos recibidos: "+i);
+    if(i == 1){
+      digitalWrite(led, HIGH);
+    }else{
+      digitalWrite(led, LOW);
+    }
+  }
+
+  */
+  
+  
+  delay(1000);
 }

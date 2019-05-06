@@ -1,6 +1,4 @@
 int led = 13;
-int i;
-
 float tempC; 
 int pinLM35 = 0; // Variable del pin de entrada del sensor (A0)
 
@@ -16,9 +14,8 @@ void loop() {
   tempC = analogRead(pinLM35); 
   tempC = (5.0 * tempC * 100.0)/1024.0;
 
-  //Serial.print(tempC);
-  Serial.write(tempC);
-  Serial.flush();
+  //Serial.println("OSCAR GUILLERMO ALEMAN CASTILLO");
+  Serial.print(tempC);
   
    /*
   if (Serial.available() > 0) {

@@ -2,6 +2,8 @@
 package pia.sayd;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 
@@ -16,6 +18,8 @@ public class Main extends javax.swing.JFrame {
     String stringTemperaturaMinima;
     float floatTemperaturaMinima = (float)20.00;
     
+    SerialPort serialPort = new SerialPort("COM3");
+            
     public Main() {
         initComponents();
         
@@ -26,7 +30,7 @@ public class Main extends javax.swing.JFrame {
         floatTemperaturaActual = Float.parseFloat(stringTemperaturaActual);
 
         
-        //SendData();
+        
         initThreadReceive();
     }
     
@@ -45,14 +49,15 @@ public class Main extends javax.swing.JFrame {
         t.start();
     }
     
-    public void SendData(){
+    public void SendData(float temp){
         
-        SerialPort serialPort = new SerialPort("COM3");
-        String mensaje = "1";
+        String mensaje = String.valueOf(temp);
+        System.out.println("Parametro enviado: "+mensaje);
         try {
-            System.out.println("Abrir puerto: "+serialPort.openPort());
-            System.out.println("Parametros establecidos: " + serialPort.setParams(9600, 8, 1, 0));
-            
+            if(!serialPort.isOpened()){
+                serialPort.openPort();
+                serialPort.setParams(9600, 8, 1, 0);
+            }
             // Pause necesaria
             try {
                 Thread.sleep(2000);
@@ -60,8 +65,14 @@ public class Main extends javax.swing.JFrame {
                 System.err.println("Error."+ex);
             }
             
-            System.out.println("Mensaje enviado: " + serialPort.writeBytes(mensaje.getBytes()));
-            System.out.println("Puesto cerrado: " + serialPort.closePort());
+            boolean send = serialPort.writeBytes(mensaje.getBytes());
+            
+            if (send == true){
+                System.out.println("Mensaje enviado a Arduino con exito");
+            }else{
+                System.out.println("Mensajen no recibido por Arduino");
+            }
+            //serialPort.closePort();
         }catch (SerialPortException ex){
             System.err.println(ex);
         }
@@ -69,7 +80,7 @@ public class Main extends javax.swing.JFrame {
     
     public void ReceiveData() throws IOException{
         
-        SerialPort serialPort = new SerialPort("COM3");
+        
         
         while(true){
             
@@ -78,8 +89,6 @@ public class Main extends javax.swing.JFrame {
             if(!serialPort.isOpened()){
                 serialPort.openPort();
                 serialPort.setParams(9600, 8, 1, 0);
-            }else{
-                
             }
             
             byte[] buffer = serialPort.readBytes(5);//Leer 10 bytes
@@ -114,7 +123,7 @@ public class Main extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         temperaturaActual = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        btnMenuClose = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
 
         jMenu3.setText("jMenu3");
@@ -261,8 +270,13 @@ public class Main extends javax.swing.JFrame {
                 .addGap(0, 6, Short.MAX_VALUE))
         );
 
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
+        btnMenuClose.setText("Close");
+        btnMenuClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuCloseActionPerformed(evt);
+            }
+        });
+        jMenuBar1.add(btnMenuClose);
 
         jMenu2.setText("Edit");
         jMenuBar1.add(jMenu2);
@@ -307,6 +321,8 @@ public class Main extends javax.swing.JFrame {
         floatTemperaturaMaxima -= 0.5;
         temperaturaMaxima.setText(String.valueOf(floatTemperaturaMaxima)+ " °C");
         
+        SendData(floatTemperaturaMaxima);
+        
         if(floatTemperaturaMaxima <= 24){
            btnDisminuirMaxima.setEnabled(false);
         }
@@ -320,6 +336,8 @@ public class Main extends javax.swing.JFrame {
         
         floatTemperaturaMaxima += 0.5;
         temperaturaMaxima.setText(String.valueOf(floatTemperaturaMaxima)+ " °C");
+        
+        SendData(floatTemperaturaMaxima);
         
         if(floatTemperaturaMaxima >= 50){
            btnAumentarMaxima.setEnabled(false);
@@ -356,6 +374,14 @@ public class Main extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btnDisminuirMinimaActionPerformed
+
+    private void btnMenuCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuCloseActionPerformed
+        try {
+            serialPort.closePort();
+        } catch (SerialPortException ex) {
+            System.err.println(ex);
+        }
+    }//GEN-LAST:event_btnMenuCloseActionPerformed
 
 
     public static void main(String args[]) {
@@ -397,7 +423,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton btnAumentarMinima;
     private javax.swing.JButton btnDisminuirMaxima;
     private javax.swing.JButton btnDisminuirMinima;
-    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu btnMenuClose;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;

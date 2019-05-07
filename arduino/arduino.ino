@@ -3,6 +3,10 @@ float tempC;
 int pinLM35 = 0; // Variable del pin de entrada del sensor (A0)
 
 
+float actualTemp;
+float maxTemp = 40;
+float minTemp= 20;
+
 void setup() {  
   
   Serial.begin(9600);              
@@ -11,26 +15,24 @@ void setup() {
 }
 
 void loop() {
-  tempC = analogRead(pinLM35); 
-  tempC = (5.0 * tempC * 100.0)/1024.0;
-
-  //Serial.println("OSCAR GUILLERMO ALEMAN CASTILLO");
-  Serial.print(tempC);
+  //Serial.print(maxTemp);
+  actualTemp = analogRead(pinLM35); 
+  actualTemp = (5.0 * actualTemp * 100.0)/1024.0;
+  Serial.print(actualTemp);
   
-   /*
   if (Serial.available() > 0) {
 
-    i = Serial.parseInt();
-    Serial.println("Datos recibidos: "+i);
-    if(i == 1){
-      digitalWrite(led, HIGH);
-    }else{
-      digitalWrite(led, LOW);
+      maxTemp = Serial.parseFloat();
+      Serial.println(maxTemp);
+      
+      if (actualTemp > maxTemp) {
+        digitalWrite(13, HIGH);
+        Serial.println("LED ON");
+      }
+      if (actualTemp < maxTemp) {
+        digitalWrite(13, LOW);
+        Serial.println("LED OFF");
+      }
     }
-  }
-
-  */
-  
-  
-  delay(1000);
+  delay(500);
 }

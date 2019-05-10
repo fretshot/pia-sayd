@@ -1,4 +1,5 @@
 int led = 13;
+int relevador = 7;
 float tempC; 
 int pinLM35 = 0; // Variable del pin de entrada del sensor (A0)
 
@@ -10,7 +11,8 @@ float minTemp= 20;
 void setup() {  
   
   Serial.begin(9600);              
-  pinMode(led, OUTPUT);  
+  pinMode(led, OUTPUT);
+  pinMode(relevador, OUTPUT);  
   
 }
 
@@ -23,16 +25,20 @@ void loop() {
   if (Serial.available() > 0) {
 
       maxTemp = Serial.parseFloat();
-      Serial.println(maxTemp);
-      
-      if (actualTemp > maxTemp) {
-        digitalWrite(13, HIGH);
-        Serial.println("LED ON");
-      }
-      if (actualTemp < maxTemp) {
-        digitalWrite(13, LOW);
-        Serial.println("LED OFF");
-      }
+      //Serial.println(maxTemp);
+  }
+
+  if (actualTemp > maxTemp) {
+      digitalWrite(13, HIGH);
+      digitalWrite(relevador,LOW);
+      //Serial.println("LED ON");
     }
-  delay(500);
+    
+  if (actualTemp < maxTemp) {
+    digitalWrite(13, LOW);
+    digitalWrite(relevador,HIGH);
+    //Serial.println("LED OFF");
+  }
+  
+  delay(1000);
 }

@@ -14,7 +14,7 @@ public class ComPortSendReceive {
     public static void main(String[] args) {
         
         
-        serialPort = new SerialPort("COM3");
+        serialPort = new SerialPort("COM4");
         
         try {
             // opening port
@@ -44,20 +44,20 @@ public class ComPortSendReceive {
             if(event.isRXCHAR() && event.getEventValue() > 0) {
                 try {
                    
-                    //String receivedData = serialPort.readString(event.getEventValue());
-                    //System.out.println("Received response from port: " + receivedData);
+                    String receivedData = serialPort.readString(event.getEventValue());
+                    System.out.println("Received response from port: " + receivedData);
                     
-                    byte[] buffer = serialPort.readBytes(5);//Leer 10 bytes
-                    String stringTemperaturaActual = new String(buffer, "UTF-8"); // Parseando los bytes a objeto String
-                    System.out.println(stringTemperaturaActual);
+                    //byte[] buffer = serialPort.readBytes(5);//Leer 10 bytes
+                    //String stringTemperaturaActual = new String(buffer, "UTF-8"); // Parseando los bytes a objeto String
+                    //System.out.println(stringTemperaturaActual);
 
 
                 }
                 catch (SerialPortException ex) {
                     System.out.println("Error in receiving response from port: " + ex);
                     
-                } catch (UnsupportedEncodingException ex) {
-                    System.err.println(ex);
+                //} catch (UnsupportedEncodingException ex) {
+                 //   System.err.println(ex);
                 }
             }
         }

@@ -10,7 +10,7 @@ a la definida en la UI como 'termostato', un relay se encenderá y este a su vez
 
 ![Banner](https://i.imgur.com/D4a22od.png)
 
-![img](https://i.imgur.com/bPIclTWs.png)
+![img](https://i.imgur.com/bPIclTWl.png)
 
 ## Libreria
 * [Java Simple Serial Conector]

@@ -2,14 +2,15 @@
 
 ## Descripción
 Proyecto desarrollado en Java con NetBeans. Uso de JavaSwing como UI.
-Consiste en leer por comunicación serial la informacion sensada por un sensor de temperatura
+Consiste en leer por puerto serie la informacion dada por un sensor de temperatura
 a travez de Arduino, y desplegarla en una interfaz gráfica.
 
-Tambien se podrá establecer parámetros de temperatura. Si la temperatura actual sensada es mayor
-a la definida en la UI, un relay se encenderá y este a su vez, activará un mini ventilardor.
+Tambien se puede establecer parámetros de temperatura. Si la temperatura actual sensada es mayor
+a la definida en la UI como 'termostato', un relay se encenderá y este a su vez, activará un mini ventilardor.
 
-![Banner](https://i.imgur.com/xY4uNYi.png)
+![Banner](https://i.imgur.com/D4a22od.png)
 
-## Credits
-All made by myself ;)
+![img](https://i.imgur.com/bPIclTWs.png)
 
+## Libreria
+* [Java Simple Serial Conector]

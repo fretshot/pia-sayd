@@ -3,6 +3,7 @@ package pia.sayd;
 
 import java.awt.Color;
 import java.io.IOException;
+import javax.swing.JOptionPane;
 
 import jssc.SerialPort;
 import jssc.SerialPortException;
@@ -40,7 +41,10 @@ public class Main extends javax.swing.JFrame {
 
         readPorts();
         
-        serialPort = new SerialPort(port);
+        
+        serialPort = new SerialPort(port);  
+        
+        
     }
     
     
@@ -141,10 +145,17 @@ public class Main extends javax.swing.JFrame {
     
     
     public void readPorts(){
-        String[] portNames = SerialPortList.getPortNames();
-
-        comboPortList.setModel(new javax.swing.DefaultComboBoxModel<>(portNames));
-        port = comboPortList.getSelectedItem().toString();
+        
+        try{
+            String[] portNames = SerialPortList.getPortNames();
+            comboPortList.setModel(new javax.swing.DefaultComboBoxModel<>(portNames));
+            port = comboPortList.getSelectedItem().toString();
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(this,"No se detectaron puertos COM.\nAsegurese de conectar Arduino.");
+            System.exit(0);
+        }
+        
+        
     }
     
 

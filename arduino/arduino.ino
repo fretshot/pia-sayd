@@ -1,39 +1,36 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#include <Separador.h>
 
 LiquidCrystal_I2C lcd (0x27, 16, 2);
 
-int led = 13;
+Separador s;
+int ledCalentar = 10;
+int ledEnfriar = 11;
 int relevador = 7;
 float tempC; 
 int pinLM35 = 0; // Variable del pin de entrada del sensor (A0)
-
-
 float actualTemp;
 float maxTemp = 40;
-float minTemp= 20;
+float minTemp = 20;
 String minim = "Min: ";
 String maxim = "Max: ";
 String actual = "Actual: ";
 String celcius = " C";
 
 void setup() {
-
   Wire.begin();
   lcd.begin(16, 2);
   lcd.clear();
   lcd.backlight();
-
-
-  
   Serial.begin(9600);              
-  pinMode(led, OUTPUT);
-  pinMode(relevador, OUTPUT);  
-  
+  pinMode(ledCalentar, OUTPUT);
+  pinMode(ledEnfriar, OUTPUT);
+  pinMode(relevador, OUTPUT);    
 }
 
 void loop() {
-  //Serial.print(maxTemp);
+
   actualTemp = analogRead(pinLM35); 
   actualTemp = (5.0 * actualTemp * 100.0)/1024.0;
 
@@ -47,20 +44,29 @@ void loop() {
   
   if (Serial.available() > 0) {
 
-      maxTemp = Serial.parseFloat();
-      //Serial.println(maxTemp);
+      String datosRecibidos = Serial.readString();
+      String tmin = s.separa(datosRecibidos,',',0);
+      String tmax = s.separa(datosRecibidos,',',1);
+      maxTemp = tmax.toFloat();
+      minTemp = tmin.toFloat();
   }
 
   if (actualTemp > maxTemp) {
-      digitalWrite(13, HIGH);
       digitalWrite(relevador,LOW);
-      //Serial.println("LED ON");
+      digitalWrite(ledEnfriar, HIGH);
     }
     
   if (actualTemp < maxTemp) {
-    digitalWrite(13, LOW);
-    digitalWrite(relevador,HIGH);
-    //Serial.println("LED OFF");
+      digitalWrite(relevador,HIGH);
+      digitalWrite(ledEnfriar, LOW);
+  }
+
+  if (actualTemp < minTemp) {
+      digitalWrite(ledCalentar, HIGH);
+    }
+    
+  if (actualTemp > minTemp) {
+      digitalWrite(ledCalentar, LOW);
   }
   
   delay(1000);

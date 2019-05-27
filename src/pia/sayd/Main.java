@@ -27,14 +27,15 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         initComponents();
         
-        //btnDisminuirMinima.setEnabled(false);
-        //btnAumentarMinima.setEnabled(false);
+        btnDisminuirMinima.setEnabled(false);
+        btnAumentarMinima.setEnabled(false);
         btnDisminuirMaxima.setEnabled(false);
         btnAumentarMaxima.setEnabled(false);
-        btnEnviar.setEnabled(false);
+        btnEnviarMax.setEnabled(false);
+        btnEnviarMin.setEnabled(false);
         
         temperaturaMaxima.setText(String.valueOf(floatTemperaturaMaxima)+ " °C");
-        //temperaturaMinima.setText(String.valueOf(floatTemperaturaMinima)+ " °C");
+        temperaturaMinima.setText(String.valueOf(floatTemperaturaMinima)+ " °C");
         
         stringTemperaturaActual = temperaturaActual.getText();
         floatTemperaturaActual = Float.parseFloat(stringTemperaturaActual);
@@ -62,9 +63,9 @@ public class Main extends javax.swing.JFrame {
         t.start();
     }
     
-    public void SendData(float temp){
+    public void SendData(String minTemp, String maxTemp){
         
-        String mensaje = String.valueOf(temp);
+        String mensaje = minTemp+","+maxTemp;
         System.out.println("Parametro enviado: "+mensaje);
         try {
             if(!serialPort.isOpened()){
@@ -126,10 +127,6 @@ public class Main extends javax.swing.JFrame {
                 floatTemperaturaActual = Float.parseFloat(stringTemperaturaActual);
             }
 
-            
-            
-
-            
             //serialPort.closePort();
             
             Thread.sleep(1000);
@@ -145,7 +142,6 @@ public class Main extends javax.swing.JFrame {
     
     
     public void readPorts(){
-        
         try{
             String[] portNames = SerialPortList.getPortNames();
             comboPortList.setModel(new javax.swing.DefaultComboBoxModel<>(portNames));
@@ -154,8 +150,6 @@ public class Main extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"No se detectaron puertos COM.\nAsegurese de conectar Arduino.");
             System.exit(0);
         }
-        
-        
     }
     
 
@@ -170,17 +164,22 @@ public class Main extends javax.swing.JFrame {
         temperaturaMaxima = new javax.swing.JLabel();
         btnDisminuirMaxima = new javax.swing.JButton();
         btnAumentarMaxima = new javax.swing.JButton();
-        btnEnviar = new javax.swing.JButton();
+        btnEnviarMax = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         temperaturaActual = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         comboPortList = new javax.swing.JComboBox<>();
         btnConectar = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        btnDisminuirMinima = new javax.swing.JButton();
+        btnEnviarMin = new javax.swing.JButton();
+        btnAumentarMinima = new javax.swing.JButton();
+        temperaturaMinima = new javax.swing.JLabel();
 
         jMenu3.setText("jMenu3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Sensor de Temperatura");
+        setTitle("Termostato");
         setBackground(java.awt.Color.darkGray);
         setResizable(false);
 
@@ -207,7 +206,7 @@ public class Main extends javax.swing.JFrame {
                 .addGap(0, 5, Short.MAX_VALUE))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Termostato", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Consolas", 1, 12))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Temperatura máxima", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Consolas", 1, 12))); // NOI18N
 
         temperaturaMaxima.setFont(new java.awt.Font("Consolas", 1, 48)); // NOI18N
         temperaturaMaxima.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -231,11 +230,11 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        btnEnviar.setFont(new java.awt.Font("Consolas", 1, 12)); // NOI18N
-        btnEnviar.setText("ENVIAR");
-        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
+        btnEnviarMax.setFont(new java.awt.Font("Consolas", 1, 12)); // NOI18N
+        btnEnviarMax.setText("ENVIAR");
+        btnEnviarMax.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEnviarActionPerformed(evt);
+                btnEnviarMaxActionPerformed(evt);
             }
         });
 
@@ -248,11 +247,12 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(temperaturaMaxima, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnDisminuirMaxima, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnDisminuirMaxima, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnAumentarMaxima, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnEnviarMax, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAumentarMaxima, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -263,7 +263,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDisminuirMaxima)
                     .addComponent(btnAumentarMaxima)
-                    .addComponent(btnEnviar))
+                    .addComponent(btnEnviarMax))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -311,7 +311,7 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(comboPortList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnConectar, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -325,6 +325,68 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Temperatura mínima", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Consolas", 1, 12))); // NOI18N
+
+        btnDisminuirMinima.setFont(new java.awt.Font("Consolas", 1, 12)); // NOI18N
+        btnDisminuirMinima.setForeground(new java.awt.Color(0, 0, 204));
+        btnDisminuirMinima.setText("DISMINUIR");
+        btnDisminuirMinima.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDisminuirMinimaActionPerformed(evt);
+            }
+        });
+
+        btnEnviarMin.setFont(new java.awt.Font("Consolas", 1, 12)); // NOI18N
+        btnEnviarMin.setText("ENVIAR");
+        btnEnviarMin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarMinActionPerformed(evt);
+            }
+        });
+
+        btnAumentarMinima.setFont(new java.awt.Font("Consolas", 1, 12)); // NOI18N
+        btnAumentarMinima.setForeground(new java.awt.Color(255, 0, 0));
+        btnAumentarMinima.setText("AUMENTAR");
+        btnAumentarMinima.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAumentarMinimaActionPerformed(evt);
+            }
+        });
+
+        temperaturaMinima.setFont(new java.awt.Font("Consolas", 1, 48)); // NOI18N
+        temperaturaMinima.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        temperaturaMinima.setText("00.00");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(temperaturaMinima, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(btnDisminuirMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEnviarMin, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAumentarMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(temperaturaMinima, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDisminuirMinima)
+                    .addComponent(btnEnviarMin)
+                    .addComponent(btnAumentarMinima))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -333,9 +395,12 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -346,7 +411,9 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -362,7 +429,7 @@ public class Main extends javax.swing.JFrame {
         temperaturaMaxima.setText(String.valueOf(floatTemperaturaMaxima)+ " °C");
         
         
-        if(floatTemperaturaMaxima <= 15){
+        if(floatTemperaturaMaxima <= 20){
            btnDisminuirMaxima.setEnabled(false);
         }
         
@@ -378,7 +445,7 @@ public class Main extends javax.swing.JFrame {
         
         
         
-        if(floatTemperaturaMaxima >= 60){
+        if(floatTemperaturaMaxima >= 100){
            btnAumentarMaxima.setEnabled(false);
         }
         
@@ -391,16 +458,50 @@ public class Main extends javax.swing.JFrame {
         initThreadReceive();
         btnConectar.setEnabled(false);
         
-        //btnDisminuirMinima.setEnabled(true);
-        //btnAumentarMinima.setEnabled(true);
+        btnDisminuirMinima.setEnabled(true);
+        btnAumentarMinima.setEnabled(true);
         btnDisminuirMaxima.setEnabled(true);
         btnAumentarMaxima.setEnabled(true);
-        btnEnviar.setEnabled(true);
+        btnEnviarMax.setEnabled(true);
+        btnEnviarMin.setEnabled(true);
     }//GEN-LAST:event_btnConectarActionPerformed
 
-    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
-        SendData(floatTemperaturaMaxima);
-    }//GEN-LAST:event_btnEnviarActionPerformed
+    private void btnEnviarMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarMaxActionPerformed
+        SendData(String.valueOf(floatTemperaturaMinima),String.valueOf(floatTemperaturaMaxima));
+    }//GEN-LAST:event_btnEnviarMaxActionPerformed
+
+    private void btnAumentarMinimaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAumentarMinimaActionPerformed
+        floatTemperaturaMinima += 0.5;
+        temperaturaMinima.setText(String.valueOf(floatTemperaturaMinima)+ " °C");
+        
+        
+        
+        if(floatTemperaturaMinima >= 40){
+           btnAumentarMinima.setEnabled(false);
+        }
+        
+        if(!btnDisminuirMinima.isEnabled()){
+            btnDisminuirMinima.setEnabled(true);
+        }
+    }//GEN-LAST:event_btnAumentarMinimaActionPerformed
+
+    private void btnDisminuirMinimaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisminuirMinimaActionPerformed
+        floatTemperaturaMinima -= 0.5;
+        temperaturaMinima.setText(String.valueOf(floatTemperaturaMinima)+ " °C");
+        
+        
+        if(floatTemperaturaMinima <= 0){
+           btnDisminuirMinima.setEnabled(false);
+        }
+        
+        if(!btnAumentarMinima.isEnabled()){
+            btnAumentarMinima.setEnabled(true);
+        }
+    }//GEN-LAST:event_btnDisminuirMinimaActionPerformed
+
+    private void btnEnviarMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarMinActionPerformed
+        SendData(String.valueOf(floatTemperaturaMinima),String.valueOf(floatTemperaturaMaxima));
+    }//GEN-LAST:event_btnEnviarMinActionPerformed
 
 
     public static void main(String args[]) {
@@ -439,17 +540,22 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAumentarMaxima;
+    private javax.swing.JButton btnAumentarMinima;
     private javax.swing.JButton btnConectar;
     private javax.swing.JButton btnDisminuirMaxima;
-    private javax.swing.JButton btnEnviar;
+    private javax.swing.JButton btnDisminuirMinima;
+    private javax.swing.JButton btnEnviarMax;
+    private javax.swing.JButton btnEnviarMin;
     private javax.swing.JComboBox<String> comboPortList;
     private javax.swing.JTextField fieldEstado;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JLabel temperaturaActual;
     private javax.swing.JLabel temperaturaMaxima;
+    private javax.swing.JLabel temperaturaMinima;
     // End of variables declaration//GEN-END:variables
 }

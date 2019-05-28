@@ -8,7 +8,7 @@ a travez de Arduino, y desplegarla en una interfaz gráfica.
 Tambien se puede establecer parámetros de temperatura. Si la temperatura actual sensada es mayor
 a la definida en la UI como 'termostato', un relay se encenderá y este a su vez, activará un mini ventilardor.
 
-![Banner](https://i.imgur.com/D4a22od.png)
+![Banner](https://i.imgur.com/GSij7L9.png)
 
 ![img](https://i.imgur.com/bPIclTWl.png)
 
